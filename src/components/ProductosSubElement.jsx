@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
-const Productos = ({productos, addProductHandler}) => {
+// eslint-disable-next-line react/prop-types
+const Productos = ({ productos, addProductDispatch }) => {
     return (
         <div>
             <h3>Productos</h3>
@@ -10,7 +12,7 @@ const Productos = ({productos, addProductHandler}) => {
                     return (
                         <Producto key={element.id}>
                             {element.nombre}
-                            <Boton onClick={() => addProductHandler(element.id, element.nombre)}>Agregar al carrito</Boton>
+                            <Boton onClick={() => addProductDispatch(element.id, element.nombre)}>Agregar al carrito</Boton>
                         </Producto>)
                 })}
             </ContenedorProductos>
@@ -56,4 +58,23 @@ const Boton = styled.button`
     }
 `;
 
-export default Productos;
+const mapStateToProps = (state) => {
+    return {
+        productos: state.productos
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addProductDispatch: (idProduct, nombre) => {
+            dispatch(
+                {
+                    type: 'Add_Item_To_Cart',
+                    idProduct: idProduct,
+                    nombre: nombre
+                }
+            )
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Productos);
